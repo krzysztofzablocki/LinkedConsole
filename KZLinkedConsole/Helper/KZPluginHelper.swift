@@ -30,11 +30,7 @@ class KZPluginHelper {
                 return subview
             }
 
-            guard let view = getViewByClassName(name, inContainer: subview) else {
-                continue
-            }
-
-            if view.isKindOfClass(targetClass) {
+            if let view = getViewByClassName(name, inContainer: subview) {
                 return view
             }
         }
@@ -81,7 +77,7 @@ extension KZPluginHelper {
     static func consoleTextView(inWindow window: NSWindow? = NSApp.mainWindow) -> NSTextView? {
         guard let contentView = window?.contentView,
         let consoleTextView = KZPluginHelper.getViewByClassName("IDEConsoleTextView", inContainer: contentView) as? NSTextView else {
-            return nil;
+            return nil
         }
         return consoleTextView
     }

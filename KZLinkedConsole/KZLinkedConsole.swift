@@ -27,7 +27,7 @@ class KZLinkedConsole: NSObject {
         self.bundle = bundle
 
         super.init()
-        center.addObserver(self, selector: Selector("didChange"), name: "IDEControlGroupDidChangeNotificationName", object: nil)
+        center.addObserver(self, selector: "didChange", name: "IDEControlGroupDidChangeNotificationName", object: nil)
     }
 
     deinit {
@@ -50,8 +50,8 @@ class KZLinkedConsole: NSObject {
         }
         
         do {
-            try storageClass.jr_swizzleMethod(Selector("fixAttributesInRange:"), withMethod: Selector("kz_fixAttributesInRange:"))
-            try textViewClass.jr_swizzleMethod(Selector("mouseDown:"), withMethod: Selector("kz_mouseDown:"))
+            try storageClass.jr_swizzleMethod("fixAttributesInRange:", withMethod: "kz_fixAttributesInRange:")
+            try textViewClass.jr_swizzleMethod("mouseDown:", withMethod: "kz_mouseDown:")
         }
         catch {
             Swift.print("Swizzling failed")
