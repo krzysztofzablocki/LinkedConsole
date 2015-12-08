@@ -67,4 +67,4 @@ class KZFormatter: DDDispatchQueueLogFormatter {
 }
 ~~~
 
-Read more about creation of this plugin on [my blog](http://localhost:1313/2015/12/writing-xcode-plugin-in-swift/)
+Read more about creation of this plugin on [my blog](http://merowing.info/2015/12/writing-xcode-plugin-in-swift/)
