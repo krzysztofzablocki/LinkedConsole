@@ -6,7 +6,7 @@ Ever wondered which part of your application logged the message you just saw in 
 
 Wonder no more, instead just click on it to jump to the culprit. Simple as that.
 
-## Instalation
+## Installation
 
 Download the source, build the Xcode project and restart Xcode. 
 The plugin will automatically be installed in ~/Library/Application Support/Developer/Shared/Xcode/Plug-ins. To uninstall, just remove the plugin from there (and restart Xcode).
