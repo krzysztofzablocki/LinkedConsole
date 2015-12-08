@@ -28,10 +28,10 @@ extension NSTextView {
         
         if appDelegate.application!(NSApplication.sharedApplication(), openFile: filePath) {
             dispatch_async(dispatch_get_main_queue()) {
-            if  let textView = KZPluginHelper.editorTextView(inWindow: self.window),
-                let line = Int(lineNumber) where line >= 1 {
-                    self.scrollTextView(textView, toLine:line)
-            }
+                if  let textView = KZPluginHelper.editorTextView(inWindow: self.window),
+                    let line = Int(lineNumber) where line >= 1 {
+                        self.scrollTextView(textView, toLine:line)
+                }
             }
         }
     }
