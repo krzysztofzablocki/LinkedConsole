@@ -1,0 +1,293 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		CD65BCC71C12AD130083875E /* KZLinkedConsole.xcscheme in Resources */ = {isa = PBXBuildFile; fileRef = CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */; };
+		CD65BCC91C12AD130083875E /* KZLinkedConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */; };
+		CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */; };
+		E291D1C15DB71725151420E9 /* NSTextStorage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291D610DE1D73CE13AEBC6A /* NSTextStorage+Extensions.swift */; };
+		E291D239A1C060C80EBEDC73 /* NSTextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291D9497D7EAE2B070429F1 /* NSTextView+Extensions.swift */; };
+		E291D64031F8515D3ECB9E68 /* KZPluginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		CD65BCC21C12AD130083875E /* KZLinkedConsole.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KZLinkedConsole.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = KZLinkedConsole.xcscheme; path = KZLinkedConsole.xcodeproj/xcshareddata/xcschemes/KZLinkedConsole.xcscheme; sourceTree = SOURCE_ROOT; };
+		CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZLinkedConsole.swift; sourceTree = "<group>"; };
+		CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject_Extension.swift; sourceTree = "<group>"; };
+		CD65BCCC1C12AD130083875E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E291D610DE1D73CE13AEBC6A /* NSTextStorage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextStorage+Extensions.swift"; sourceTree = "<group>"; };
+		E291D9497D7EAE2B070429F1 /* NSTextView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextView+Extensions.swift"; sourceTree = "<group>"; };
+		E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPluginHelper.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		CD65BCBA1C12AD130083875E = {
+			isa = PBXGroup;
+			children = (
+				CD65BCC41C12AD130083875E /* KZLinkedConsole */,
+				CD65BCC31C12AD130083875E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		CD65BCC31C12AD130083875E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CD65BCC21C12AD130083875E /* KZLinkedConsole.xcplugin */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CD65BCC41C12AD130083875E /* KZLinkedConsole */ = {
+			isa = PBXGroup;
+			children = (
+				E291D43AF86FB2E17C7780A4 /* Helper */,
+				E291DFC4FD05D74F658291FF /* Extensions */,
+				CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */,
+				CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */,
+				CD65BCCC1C12AD130083875E /* Info.plist */,
+				CD65BCC51C12AD130083875E /* Supporting Files */,
+			);
+			path = KZLinkedConsole;
+			sourceTree = "<group>";
+		};
+		CD65BCC51C12AD130083875E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		E291D43AF86FB2E17C7780A4 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */,
+			);
+			path = Helper;
+			sourceTree = "<group>";
+		};
+		E291DFC4FD05D74F658291FF /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E291D610DE1D73CE13AEBC6A /* NSTextStorage+Extensions.swift */,
+				E291D9497D7EAE2B070429F1 /* NSTextView+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CD65BCC11C12AD130083875E /* KZLinkedConsole */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD65BCCF1C12AD130083875E /* Build configuration list for PBXNativeTarget "KZLinkedConsole" */;
+			buildPhases = (
+				CD65BCBF1C12AD130083875E /* Sources */,
+				CD65BCC01C12AD130083875E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = KZLinkedConsole;
+			productName = KZLinkedConsole;
+			productReference = CD65BCC21C12AD130083875E /* KZLinkedConsole.xcplugin */;
+			productType = "com.apple.product-type.bundle";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CD65BCBB1C12AD130083875E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0710;
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = pixle;
+				TargetAttributes = {
+					CD65BCC11C12AD130083875E = {
+						CreatedOnToolsVersion = 7.1.1;
+					};
+				};
+			};
+			buildConfigurationList = CD65BCBE1C12AD130083875E /* Build configuration list for PBXProject "KZLinkedConsole" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = CD65BCBA1C12AD130083875E;
+			productRefGroup = CD65BCC31C12AD130083875E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CD65BCC11C12AD130083875E /* KZLinkedConsole */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CD65BCC01C12AD130083875E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD65BCC71C12AD130083875E /* KZLinkedConsole.xcscheme in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CD65BCBF1C12AD130083875E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD65BCC91C12AD130083875E /* KZLinkedConsole.swift in Sources */,
+				CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */,
+				E291D1C15DB71725151420E9 /* NSTextStorage+Extensions.swift in Sources */,
+				E291D239A1C060C80EBEDC73 /* NSTextView+Extensions.swift in Sources */,
+				E291D64031F8515D3ECB9E68 /* KZPluginHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		CD65BCCD1C12AD130083875E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+			};
+			name = Debug;
+		};
+		CD65BCCE1C12AD130083875E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+			};
+			name = Release;
+		};
+		CD65BCD01C12AD130083875E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(HOME)";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = KZLinkedConsole/Info.plist;
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				LD_RUNPATH_SEARCH_PATHS = "$(DT_TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = pl.pixle.KZLinkedConsole;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xcplugin;
+			};
+			name = Debug;
+		};
+		CD65BCD11C12AD130083875E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
+				DEPLOYMENT_LOCATION = YES;
+				DSTROOT = "$(HOME)";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				INFOPLIST_FILE = KZLinkedConsole/Info.plist;
+				INSTALL_PATH = "/Library/Application Support/Developer/Shared/Xcode/Plug-ins";
+				LD_RUNPATH_SEARCH_PATHS = "$(DT_TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				PRODUCT_BUNDLE_IDENTIFIER = pl.pixle.KZLinkedConsole;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = xcplugin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CD65BCBE1C12AD130083875E /* Build configuration list for PBXProject "KZLinkedConsole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD65BCCD1C12AD130083875E /* Debug */,
+				CD65BCCE1C12AD130083875E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD65BCCF1C12AD130083875E /* Build configuration list for PBXNativeTarget "KZLinkedConsole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD65BCD01C12AD130083875E /* Debug */,
+				CD65BCD11C12AD130083875E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CD65BCBB1C12AD130083875E /* Project object */;
+}
