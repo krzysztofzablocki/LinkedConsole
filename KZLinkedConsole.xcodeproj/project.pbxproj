@@ -10,6 +10,7 @@
 		CD65BCC71C12AD130083875E /* KZLinkedConsole.xcscheme in Resources */ = {isa = PBXBuildFile; fileRef = CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */; };
 		CD65BCC91C12AD130083875E /* KZLinkedConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */; };
 		CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */; };
+		CDC5BA501C1747660083DD0D /* JRSwizzle.m in Sources */ = {isa = PBXBuildFile; fileRef = CDC5BA4F1C1747660083DD0D /* JRSwizzle.m */; };
 		E291D1C15DB71725151420E9 /* NSTextStorage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291D610DE1D73CE13AEBC6A /* NSTextStorage+Extensions.swift */; };
 		E291D239A1C060C80EBEDC73 /* NSTextView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291D9497D7EAE2B070429F1 /* NSTextView+Extensions.swift */; };
 		E291D64031F8515D3ECB9E68 /* KZPluginHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */; };
@@ -21,6 +22,9 @@
 		CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZLinkedConsole.swift; sourceTree = "<group>"; };
 		CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSObject_Extension.swift; sourceTree = "<group>"; };
 		CD65BCCC1C12AD130083875E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CDC5BA4D1C1747660083DD0D /* KZLinkedConsole-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KZLinkedConsole-Bridging-Header.h"; sourceTree = "<group>"; };
+		CDC5BA4E1C1747660083DD0D /* JRSwizzle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JRSwizzle.h; path = Helper/JRSwizzle.h; sourceTree = "<group>"; };
+		CDC5BA4F1C1747660083DD0D /* JRSwizzle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JRSwizzle.m; path = Helper/JRSwizzle.m; sourceTree = "<group>"; };
 		E291D610DE1D73CE13AEBC6A /* NSTextStorage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextStorage+Extensions.swift"; sourceTree = "<group>"; };
 		E291D9497D7EAE2B070429F1 /* NSTextView+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTextView+Extensions.swift"; sourceTree = "<group>"; };
 		E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KZPluginHelper.swift; sourceTree = "<group>"; };
@@ -52,6 +56,9 @@
 				CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */,
 				CD65BCCC1C12AD130083875E /* Info.plist */,
 				CD65BCC51C12AD130083875E /* Supporting Files */,
+				CDC5BA4E1C1747660083DD0D /* JRSwizzle.h */,
+				CDC5BA4F1C1747660083DD0D /* JRSwizzle.m */,
+				CDC5BA4D1C1747660083DD0D /* KZLinkedConsole-Bridging-Header.h */,
 			);
 			path = KZLinkedConsole;
 			sourceTree = "<group>";
@@ -152,6 +159,7 @@
 				CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */,
 				E291D1C15DB71725151420E9 /* NSTextStorage+Extensions.swift in Sources */,
 				E291D239A1C060C80EBEDC73 /* NSTextView+Extensions.swift in Sources */,
+				CDC5BA501C1747660083DD0D /* JRSwizzle.m in Sources */,
 				E291D64031F8515D3ECB9E68 /* KZPluginHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -235,6 +243,7 @@
 		CD65BCD01C12AD130083875E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(HOME)";
@@ -245,6 +254,8 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.pixle.KZLinkedConsole;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KZLinkedConsole/KZLinkedConsole-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				WRAPPER_EXTENSION = xcplugin;
 			};
 			name = Debug;
@@ -252,6 +263,7 @@
 		CD65BCD11C12AD130083875E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEPLOYMENT_LOCATION = YES;
 				DSTROOT = "$(HOME)";
@@ -262,6 +274,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_BUNDLE_IDENTIFIER = pl.pixle.KZLinkedConsole;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "KZLinkedConsole/KZLinkedConsole-Bridging-Header.h";
 				WRAPPER_EXTENSION = xcplugin;
 			};
 			name = Release;

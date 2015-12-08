@@ -44,10 +44,17 @@ class KZLinkedConsole: NSObject {
     }
 
     static func swizzleMethods() {
-        let original = class_getInstanceMethod(NSClassFromString("NSTextStorage"), Selector("fixAttributesInRange:"))
-        method_exchangeImplementations(original, class_getInstanceMethod(NSClassFromString("NSTextStorage"), Selector("kz_fixAttributesInRange:")))
-
-        let original2 = class_getInstanceMethod(NSClassFromString("NSTextView"), Selector("mouseDown:"))
-        method_exchangeImplementations(original2, class_getInstanceMethod(NSClassFromString("NSTextView"), Selector("kz_mouseDown:")))
+        guard let storageClass = NSClassFromString("NSTextStorage") as? NSObject.Type,
+            let textViewClass = NSClassFromString("NSTextView") as? NSObject.Type else {
+                return
+        }
+        
+        do {
+            try storageClass.jr_swizzleMethod(Selector("fixAttributesInRange:"), withMethod: Selector("kz_fixAttributesInRange:"))
+            try textViewClass.jr_swizzleMethod(Selector("mouseDown:"), withMethod: Selector("kz_mouseDown:"))
+        }
+        catch {
+            Swift.print("Swizzling failed")
+        }
     }
 }
