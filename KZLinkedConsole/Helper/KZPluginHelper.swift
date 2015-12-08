@@ -30,11 +30,7 @@ class KZPluginHelper {
                 return subview
             }
 
-            guard let view = getViewByClassName(name, inContainer: subview) else {
-                continue
-            }
-
-            if view.isKindOfClass(targetClass) {
+            if let view = getViewByClassName(name, inContainer: subview) {
                 return view
             }
         }
