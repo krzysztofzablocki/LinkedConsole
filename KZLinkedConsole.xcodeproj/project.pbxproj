@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD6351371C185A4D001B7FD5 /* KZFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = CD6351361C185A4D001B7FD5 /* KZFunctions.m */; };
 		CD65BCC71C12AD130083875E /* KZLinkedConsole.xcscheme in Resources */ = {isa = PBXBuildFile; fileRef = CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */; };
 		CD65BCC91C12AD130083875E /* KZLinkedConsole.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */; };
 		CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD65BCCA1C12AD130083875E /* NSObject_Extension.swift */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		CD6351351C185A4D001B7FD5 /* KZFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KZFunctions.h; sourceTree = "<group>"; };
+		CD6351361C185A4D001B7FD5 /* KZFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KZFunctions.m; sourceTree = "<group>"; };
 		CD65BCC21C12AD130083875E /* KZLinkedConsole.xcplugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KZLinkedConsole.xcplugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD65BCC61C12AD130083875E /* KZLinkedConsole.xcscheme */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = KZLinkedConsole.xcscheme; path = KZLinkedConsole.xcodeproj/xcshareddata/xcschemes/KZLinkedConsole.xcscheme; sourceTree = SOURCE_ROOT; };
 		CD65BCC81C12AD130083875E /* KZLinkedConsole.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KZLinkedConsole.swift; sourceTree = "<group>"; };
@@ -74,6 +77,8 @@
 		E291D43AF86FB2E17C7780A4 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				CD6351351C185A4D001B7FD5 /* KZFunctions.h */,
+				CD6351361C185A4D001B7FD5 /* KZFunctions.m */,
 				E291DBD18C7290446CE4E08D /* KZPluginHelper.swift */,
 			);
 			path = Helper;
@@ -155,6 +160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD6351371C185A4D001B7FD5 /* KZFunctions.m in Sources */,
 				CD65BCC91C12AD130083875E /* KZLinkedConsole.swift in Sources */,
 				CD65BCCB1C12AD130083875E /* NSObject_Extension.swift in Sources */,
 				E291D1C15DB71725151420E9 /* NSTextStorage+Extensions.swift in Sources */,

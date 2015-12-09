@@ -6,7 +6,7 @@
 import Foundation
 import AppKit
 
-class KZPluginHelper {
+class KZPluginHelper: NSObject {
     static func runShellCommand(command: String) -> String? {
         let pipe = NSPipe()
         let task = NSTask()
@@ -43,23 +43,28 @@ class KZPluginHelper {
 
 extension KZPluginHelper {
     static func workspacePath() -> String? {
-        guard let anyClass = NSClassFromString("IDEWorkspaceWindowController") as? NSObject.Type,
-        let windowControllers = anyClass.valueForKey("workspaceWindowControllers") as? [NSObject],
-        let window = NSApp.keyWindow ?? NSApp.windows.first else {
-            return nil
+        if let workspacePath = KZFunctions.workspacePath() {
+            return workspacePath
         }
-
+        
+        guard let anyClass = NSClassFromString("IDEWorkspaceWindowController") as? NSObject.Type,
+            let windowControllers = anyClass.valueForKey("workspaceWindowControllers") as? [NSObject],
+            let window = NSApp.keyWindow ?? NSApp.windows.first else {
+                Swift.print("Failed to establish workspace path")
+                return nil
+        }
         var workspace: NSObject?
         for controller in windowControllers {
             if controller.valueForKey("window")?.isEqual(window) == true {
                 workspace = controller.valueForKey("_workspace") as? NSObject
             }
         }
-
+        
         guard let workspacePath = workspace?.valueForKeyPath("representingFilePath._pathString") as? NSString else {
+            Swift.print("Failed to establish workspace path")
             return nil
         }
-
+        
         return workspacePath.stringByDeletingLastPathComponent as String
     }
 

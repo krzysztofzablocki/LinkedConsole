@@ -27,14 +27,14 @@ class KZLinkedConsole: NSObject {
         self.bundle = bundle
 
         super.init()
-        center.addObserver(self, selector: "didChange", name: "IDEControlGroupDidChangeNotificationName", object: nil)
+        center.addObserver(self, selector: "didChange:", name: "IDEControlGroupDidChangeNotificationName", object: nil)
     }
 
     deinit {
         center.removeObserver(self)
     }
 
-    func didChange() {
+    func didChange(notification: NSNotification) {
         guard let consoleTextView = KZPluginHelper.consoleTextView(),
         let textStorage = consoleTextView.valueForKey("textStorage") as? NSTextStorage else {
             return
