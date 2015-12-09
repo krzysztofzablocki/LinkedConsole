@@ -43,13 +43,22 @@ extension NSTextStorage {
         }
 
         let matches = pattern.matchesInString(string, options: .ReportProgress, range: editedRange)
-        for result in matches where result.numberOfRanges == 4 {
+        for result in matches where result.numberOfRanges == 5 {
             let fullRange = result.rangeAtIndex(0)
             let fileNameRange = result.rangeAtIndex(1)
-            let extensionRange = result.rangeAtIndex(2)
-            let lineRange = result.rangeAtIndex(3)
+            let maybeParensRange = result.rangeAtIndex(3)
+            let lineRange = result.rangeAtIndex(4)
 
-            guard let result = KZPluginHelper.runShellCommand("find \"\(path)\" -name \"\(text.substringWithRange(fileNameRange)).\(text.substringWithRange(extensionRange))\" | head -n 1") else {
+            let ext: String
+            if maybeParensRange.location == NSNotFound {
+                let extensionRange = result.rangeAtIndex(2)
+                ext = text.substringWithRange(extensionRange)
+            } else {
+                ext = "swift"
+            }
+            let filename = "\(text.substringWithRange(fileNameRange)).\(ext)"
+
+            guard let result = KZPluginHelper.runShellCommand("find '\(path)' -name '\(filename)' | head -n 1") else {
                 continue
             }
 
@@ -61,6 +70,11 @@ extension NSTextStorage {
     }
 
     private var pattern: NSRegularExpression {
-        return try! NSRegularExpression(pattern: "(\\w+)\\.(\\w+)\\:(\\d+)", options: .CaseInsensitive)
+        // The second capture is either a file extension (default) or a function name (SwiftyBeaver format).
+        // Callers should check for the presence of the third capture to detect if it is SwiftyBeaver or not.
+        //
+        // (If this gets any more complicated there will need to be a formal way to walk through multiple
+        // patterns and check if each one matches.)
+        return try! NSRegularExpression(pattern: "(\\w+)\\.(\\w+)(\\(\\))?:(\\d+)", options: .CaseInsensitive)
     }
 }
