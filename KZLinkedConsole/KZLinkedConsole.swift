@@ -39,7 +39,10 @@ class KZLinkedConsole: NSObject {
         let textStorage = consoleTextView.valueForKey("textStorage") as? NSTextStorage else {
             return
         }
-
+        consoleTextView.linkTextAttributes = [
+            NSCursorAttributeName: NSCursor.pointingHandCursor(),
+            NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
+        ]
         textStorage.kz_isUsedInXcodeConsole = true
     }
 
