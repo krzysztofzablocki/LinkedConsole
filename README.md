@@ -17,7 +17,7 @@ This plugin can be installed using Alcatraz. Search for KZLinkedConsole in Alcat
 
 ## Details
 
-If a console logs a **fileName.extension:XX** that name turns into a clickable hyperlink that will open the specific file and highlight the line.
+If a console logs a **fileName.extension:123** that name turns into a clickable hyperlink that will open the specific file and highlight the line. The default log format of [SwiftyBeaver](https://github.com/skreutzberger/SwiftyBeaver) is supported as well, so you can also log **fileName.function():XX** (but this only works for .swift files as that is the assumed extension).
 
 That way you can either use your own logging mechanism and just add this simple prefix, e.g.
 ~~~swift
