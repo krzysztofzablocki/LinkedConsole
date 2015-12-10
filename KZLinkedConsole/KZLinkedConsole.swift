@@ -12,7 +12,7 @@ var sharedPlugin: KZLinkedConsole?
 class KZLinkedConsole: NSObject {
 
     internal struct Strings {
-        static let linkedPath = "KZLinkedPath"
+        static let linkedFileName = "KZLinkedFileName"
         static let linkedLine = "KZLinkedLine"
     }
 

@@ -38,9 +38,6 @@ extension NSTextStorage {
 
     private func injectLinksIntoLogs() {
         let text = string as NSString
-        guard let path = KZPluginHelper.workspacePath() else {
-            return
-        }
 
         let matches = pattern.matchesInString(string, options: .ReportProgress, range: editedRange)
         for result in matches where result.numberOfRanges == 5 {
@@ -56,14 +53,10 @@ extension NSTextStorage {
             } else {
                 ext = "swift"
             }
-            let filename = "\(text.substringWithRange(fileNameRange)).\(ext)"
-
-            guard let result = KZPluginHelper.runShellCommand("find '\(path)' -name '\(filename)' | head -n 1") else {
-                continue
-            }
+            let fileName = "\(text.substringWithRange(fileNameRange)).\(ext)"
 
             addAttribute(NSLinkAttributeName, value: "", range: fullRange)
-            addAttribute(KZLinkedConsole.Strings.linkedPath, value: result, range: fullRange)
+            addAttribute(KZLinkedConsole.Strings.linkedFileName, value: fileName, range: fullRange)
             addAttribute(KZLinkedConsole.Strings.linkedLine, value: text.substringWithRange(lineRange), range: fullRange)
         }
     }

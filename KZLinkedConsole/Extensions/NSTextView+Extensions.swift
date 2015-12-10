@@ -10,7 +10,7 @@ extension NSTextView {
     func kz_mouseDown(event: NSEvent) {
         let pos = convertPoint(event.locationInWindow, fromView:nil)
         let idx = characterIndexForInsertionAtPoint(pos)
-        
+
         guard let expectedClass = NSClassFromString("IDEConsoleTextView")
             where isKindOfClass(expectedClass) && attributedString().length > 1 && idx < attributedString().length else {
                 kz_mouseDown(event)
@@ -19,11 +19,19 @@ extension NSTextView {
         
         let attr = attributedString().attributesAtIndex(idx, effectiveRange: nil)
         
-        guard let filePath = attr[KZLinkedConsole.Strings.linkedPath] as? String,
+        guard let fileName = attr[KZLinkedConsole.Strings.linkedFileName] as? String,
             let lineNumber = attr[KZLinkedConsole.Strings.linkedLine] as? String,
             let appDelegate = NSApplication.sharedApplication().delegate else {
                 kz_mouseDown(event)
                 return
+        }
+        
+        guard let workspacePath = KZPluginHelper.workspacePath() else {
+            return
+        }
+        
+        guard let filePath = KZPluginHelper.runShellCommand("find '\(workspacePath)' -name '\(fileName)' | head -n 1") else {
+            return
         }
         
         if appDelegate.application!(NSApplication.sharedApplication(), openFile: filePath) {
