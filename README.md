@@ -17,7 +17,7 @@ This plugin can be installed using Alcatraz. Search for KZLinkedConsole in Alcat
 
 ## Details
 
-If a console logs a **fileName.extension:123** that name turns into a clickable hyperlink that will open the specific file and highlight the line. The default log format of [SwiftyBeaver](https://github.com/skreutzberger/SwiftyBeaver) is supported as well, so you can also log **fileName.function():XX** (but this only works for .swift files as that is the assumed extension).
+If a console logs a **fileName.extension:123** that name turns into a clickable hyperlink that will open the specific file and highlight the line.
 
 That way you can either use your own logging mechanism and just add this simple prefix, e.g.
 ~~~swift
@@ -26,7 +26,11 @@ func logMessage(message: String, filename: String = __FILE__, line: Int = __LINE
 }
 ~~~
 
-or if you use [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack) you can use my custom formatter for some really nice logs.
+## Integration with popular loggers
+
+- [XCGLogger](https://github.com/DaveWoodCom/XCGLogger) is supported out of the box.
+- [SwiftyBeaver](https://github.com/skreutzberger/SwiftyBeaver) is supported out of the box.
+- [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack) supported, with a log formatter printing **fileName.extension:123**, here's my log formatter for it:
 
 Swift version (Objective-C version is part of [KZBootstrap](https://github.com/krzysztofzablocki/KZBootstrap)):
 ~~~swift
@@ -67,4 +71,7 @@ class KZFormatter: DDDispatchQueueLogFormatter {
 }
 ~~~
 
+## More info
 Read more about creation of this plugin on [my blog](http://merowing.info/2015/12/writing-xcode-plugin-in-swift/)
+
+[Follow me on twitter for more useful iOS stuff](http://twitter.com/merowing_)
