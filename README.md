@@ -30,6 +30,10 @@ func logMessage(message: String, filename: String = __FILE__, line: Int = __LINE
 
 - [XCGLogger](https://github.com/DaveWoodCom/XCGLogger) is supported out of the box.
 - [SwiftyBeaver](https://github.com/skreutzberger/SwiftyBeaver) is supported out of the box.
+- [QorumLogs](https://github.com/goktugyil/QorumLogs) after enable KZLinkedConsoleSupportEnabled flag.  
+~~~swift
+QorumLogs.KZLinkedConsoleSupportEnabled = true
+~~~
 - [CocoaLumberjack](https://github.com/CocoaLumberjack/CocoaLumberjack) supported, with a log formatter printing **fileName.extension:123**, here's my log formatter for it:
 
 Swift version (Objective-C version is part of [KZBootstrap](https://github.com/krzysztofzablocki/KZBootstrap)):
