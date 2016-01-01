@@ -30,8 +30,7 @@ extension NSTextView {
             return
         }
         
-        let args = ["-L", workspacePath, "-name", fileName, "-print", "-quit"]
-        guard let filePath = KZPluginHelper.runShellCommand("/usr/bin/find", arguments: args) else {
+        guard let filePath = kz_findFile(workspacePath, fileName) else {
             return
         }
         
@@ -63,4 +62,53 @@ extension NSTextView {
             }
         }
     }
+}
+
+
+/**
+ Search for the given filename in the given workspace.
+
+ To avoid parsing the project's header file inclusion path,
+ we use the following heuristic:
+
+ 1. Look for the file in the current workspace.
+ 2. Look in the parent directory of the current workspace,
+    excluding the current workspace because we've already searched there.
+ 3. Keep recursing upwards, but stop if we have gone more than 2
+    levels up or we have reached /foo/bar.
+
+ The assumption here is that /foo/bar would actually be /Users/username
+ and searching the developer's entire home directory is likely to be too
+ expensive.
+
+ Similarly, if the project is in some subdirectory heirarchy, then if
+ we are three levels up then that search is likely to be large and too
+ expensive also.
+
+ */
+func kz_findFile(workspacePath : String, _ fileName : String) -> String? {
+    var searchPath = workspacePath
+    var prevSearchPath : String? = nil
+    var searchCount = 0
+    while true {
+        let result = kz_findFile(fileName, searchPath, prevSearchPath)
+        if result != nil && !result!.isEmpty {
+            return result
+        }
+
+        prevSearchPath = searchPath
+        searchPath = (searchPath as NSString).stringByDeletingLastPathComponent
+        searchCount++
+        let searchPathCount = searchPath.componentsSeparatedByString("/").count
+        if searchPathCount <= 3 || searchCount >= 2 {
+            return nil
+        }
+    }
+}
+
+func kz_findFile(fileName : String, _ searchPath : String, _ prevSearchPath : String?) -> String? {
+    let args = (prevSearchPath == nil ?
+        ["-L", searchPath, "-name", fileName, "-print", "-quit"] :
+        ["-L", searchPath, "-name", prevSearchPath!, "-prune", "-o", "-name", fileName, "-print", "-quit"])
+    return KZPluginHelper.runShellCommand("/usr/bin/find", arguments: args)
 }
