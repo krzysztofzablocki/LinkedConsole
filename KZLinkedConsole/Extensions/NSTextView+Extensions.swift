@@ -30,7 +30,8 @@ extension NSTextView {
             return
         }
         
-        guard let filePath = KZPluginHelper.runShellCommand("find '\(workspacePath)' -name '\(fileName)' | head -n 1") else {
+        let args = [workspacePath, "-name", fileName, "-print", "-quit"]
+        guard let filePath = KZPluginHelper.runShellCommand("/usr/bin/find", arguments: args) else {
             return
         }
         
