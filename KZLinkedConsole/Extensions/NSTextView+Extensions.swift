@@ -66,15 +66,22 @@ extension NSTextView {
 
 
 /**
+ [workspacePath : [fileName : filePath]]
+ */
+var kz_filePathCache = [String : [String : String]]()
+
+
+/**
  Search for the given filename in the given workspace.
 
  To avoid parsing the project's header file inclusion path,
  we use the following heuristic:
 
- 1. Look for the file in the current workspace.
- 2. Look in the parent directory of the current workspace,
+ 1. Look in kz_filePathCache.
+ 2. Look for the file in the current workspace.
+ 3. Look in the parent directory of the current workspace,
     excluding the current workspace because we've already searched there.
- 3. Keep recursing upwards, but stop if we have gone more than 2
+ 4. Keep recursing upwards, but stop if we have gone more than 2
     levels up or we have reached /foo/bar.
 
  The assumption here is that /foo/bar would actually be /Users/username
@@ -87,12 +94,21 @@ extension NSTextView {
 
  */
 func kz_findFile(workspacePath : String, _ fileName : String) -> String? {
+    var thisWorkspaceCache = kz_filePathCache[workspacePath] ?? [:]
+    if let result = thisWorkspaceCache[fileName] {
+        if NSFileManager.defaultManager().fileExistsAtPath(result) {
+            return result
+        }
+    }
+
     var searchPath = workspacePath
     var prevSearchPath : String? = nil
     var searchCount = 0
     while true {
         let result = kz_findFile(fileName, searchPath, prevSearchPath)
         if result != nil && !result!.isEmpty {
+            thisWorkspaceCache[fileName] = result
+            kz_filePathCache[workspacePath] = thisWorkspaceCache
             return result
         }
 
