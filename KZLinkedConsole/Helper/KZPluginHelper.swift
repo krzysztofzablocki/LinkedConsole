@@ -7,11 +7,11 @@ import Foundation
 import AppKit
 
 class KZPluginHelper: NSObject {
-    static func runShellCommand(command: String) -> String? {
+    static func runShellCommand(launchPath: String, arguments: [String]) -> String? {
         let pipe = NSPipe()
         let task = NSTask()
-        task.launchPath = "/bin/sh"
-        task.arguments = ["-c", String(format: "%@", command)]
+        task.launchPath = launchPath
+        task.arguments = arguments
         task.standardOutput = pipe
         let file = pipe.fileHandleForReading
         task.launch()
