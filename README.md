@@ -22,7 +22,7 @@ If a console logs a **fileName.extension:123** that name turns into a clickable 
 That way you can either use your own logging mechanism and just add this simple prefix, e.g.
 ~~~swift
 func logMessage(message: String, filename: String = __FILE__, line: Int = __LINE__, function: String = __FUNCTION__) {
-    print("\(filename.lastPathComponent):\(line) \(function):\r\(message)")
+    print("\((filename as NSString).lastPathComponent):\(line) \(function):\r\(message)")
 }
 ~~~
 
