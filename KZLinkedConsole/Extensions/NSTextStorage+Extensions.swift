@@ -60,6 +60,10 @@ extension NSTextStorage {
             return
         }
 
+        if !self.editedMask.contains(.EditedCharacters) {
+            return
+        }
+
         self.kz_linkInjector.injectLinks(self.editedRange)
     }
 }
@@ -136,20 +140,6 @@ final class KZLinkInjector {
     private let pendingLinksLock = NSLock()
 
     /**
-     The maximum of the range that we have already processed.  This
-     assumes that processing always starts from the beginning of the
-     NSTextStorage contents and works forward.
-
-     If we receive a change that is below maxRange, we ignore it.  This
-     is particularly important because our calls to textStorage.endEditing
-     will trigger a change notification and so we'd be re-triggering ourselves
-     to work on the same text again if we didn't have this check.
-
-     May only be accessed from the main thread.
-     */
-    private var maxRange = 0
-
-    /**
      Queue used for log parsing work.
      */
     private var queue : dispatch_queue_t {
@@ -199,14 +189,6 @@ final class KZLinkInjector {
     }
 
     private func injectLinks(range : NSRange) {
-        let newMaxRange = range.location + range.length
-        if newMaxRange <= maxRange {
-            DLog("Ignoring injectLinks \(range)")
-            return
-        }
-
-        maxRange = newMaxRange
-
         if (range.length <= syncThreshold) {
             self.injectLinksIntoTextSync(range)
         }
