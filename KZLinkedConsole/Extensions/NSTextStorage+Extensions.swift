@@ -252,15 +252,15 @@ final class KZLinkInjector {
         let text = string as NSString
         var links : [LinkDetails] = []
         let matches = pattern.matchesInString(string, options: [], range: range)
-        for result in matches {
-            let fullRange = result.rangeAtIndex(1)
-            let fileNameRange = result.rangeAtIndex(2)
-            let maybeParensRange = result.rangeAtIndex(4)
-            let lineRange = result.rangeAtIndex(5)
+        for result in matches where result.numberOfRanges == 5 {
+            let fullRange = result.rangeAtIndex(0)
+            let fileNameRange = result.rangeAtIndex(1)
+            let maybeParensRange = result.rangeAtIndex(3)
+            let lineRange = result.rangeAtIndex(4)
 
             let ext: String
             if maybeParensRange.location == NSNotFound {
-                let extensionRange = result.rangeAtIndex(3)
+                let extensionRange = result.rangeAtIndex(2)
                 ext = text.substringWithRange(extensionRange)
             } else {
                 ext = "swift"
@@ -275,21 +275,12 @@ final class KZLinkInjector {
     }
 
     private static var pattern: NSRegularExpression {
-        // Default format:
-        // <Start of line><Ignored stuff> <File name>.<File extension>:<Line no>
-        //
-        // SwiftyBeaver format, with .swift file extension missing and assumed:
-        // <Start of line><Ignored stuff> <File name>.<Function name>():<Line no>
-        //
-        // The third capture is either a file extension (default) or a function name (SwiftyBeaver format).
-        // Callers should check for the presence of the fourth capture to detect if it is SwiftyBeaver or not.
+        // The second capture is either a file extension (default) or a function name (SwiftyBeaver format).
+        // Callers should check for the presence of the third capture to detect if it is SwiftyBeaver or not.
         //
         // (If this gets any more complicated there will need to be a formal way to walk through multiple
         // patterns and check if each one matches.)
-        //
-        // In both formats, <Ignored stuff> is capped at 200 chars.  This is to avoid
-        // performance problems when parsing very long lines (e.g. debug data printed by lldb).
-        return try! NSRegularExpression(pattern: "^.{1,200} (([\\w\\+]+)\\.(\\w+)(\\([^)]*\\))?:(\\d+))", options: .AnchorsMatchLines)
+        return try! NSRegularExpression(pattern: "([\\w\\+]+)\\.(\\w+)(\\([^)]*\\))?:(\\d+)", options: .CaseInsensitive)
     }
 
     private static func withLock<T>(lock: NSLock, block: () -> T) -> T {
