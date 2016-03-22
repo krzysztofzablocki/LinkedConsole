@@ -51,7 +51,7 @@ extension NSTextView {
         
         var currentLine = 1
         var index = 0
-        for (; index < text.length; currentLine++) {
+        while index < text.length {
             let lineRange = text.lineRangeForRange(NSMakeRange(index, 0))
             index = NSMaxRange(lineRange)
             
@@ -60,6 +60,7 @@ extension NSTextView {
                 textView.setSelectedRange(lineRange)
                 break
             }
+            currentLine += 1
         }
     }
 }
@@ -114,7 +115,7 @@ func kz_findFile(workspacePath : String, _ fileName : String) -> String? {
 
         prevSearchPath = searchPath
         searchPath = (searchPath as NSString).stringByDeletingLastPathComponent
-        searchCount++
+        searchCount += 1
         let searchPathCount = searchPath.componentsSeparatedByString("/").count
         if searchPathCount <= 3 || searchCount >= 2 {
             return nil
