@@ -161,7 +161,7 @@ final class KZLinkInjector {
         DLog("Appending \(newLinks.count) \(newLinks.first!.range)")
         return KZLinkInjector.withLock(pendingLinksLock) { [unowned self] () -> Int in
             self.pendingLinks += newLinks
-            self.pendingLinksCounter++
+            self.pendingLinksCounter += 1
             return self.pendingLinksCounter
         }
     }
