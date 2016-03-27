@@ -70,12 +70,18 @@ extension KZPluginHelper {
 
     static func editorTextView(inWindow window: NSWindow? = NSApp.mainWindow) -> NSTextView? {
         guard let window = window,
-        let windowController = window.windowController,
-        let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor"),
-        let textView = editor.valueForKey("textView") as? NSTextView else {
+            let windowController = window.windowController,
+            let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor") else {
+                return nil
+        }
+
+        let type = String(editor.dynamicType)
+        if type != "NSKVONotifying_IDESourceCodeEditor" {
+            NSLog(type)
             return nil
         }
 
+        let textView = editor.valueForKey("textView") as? NSTextView
         return textView
     }
 
