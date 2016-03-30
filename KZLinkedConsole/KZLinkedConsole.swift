@@ -29,6 +29,9 @@ class KZLinkedConsole: NSObject {
         super.init()
         let didChangeSelector = #selector(KZLinkedConsole.didChange(_:))
         center.addObserver(self, selector: didChangeSelector, name: "IDEControlGroupDidChangeNotificationName", object: nil)
+
+        let appDidLaunchSelector = #selector(KZLinkedConsole.didApplicationFinishLaunchingNotification(_:))
+        center.addObserver(self, selector: appDidLaunchSelector, name: "NSApplicationDidFinishLaunchingNotification", object: nil)
     }
 
     deinit {
@@ -47,6 +50,31 @@ class KZLinkedConsole: NSObject {
         textStorage.kz_isUsedInXcodeConsole = true
     }
 
+    func didApplicationFinishLaunchingNotification(note:NSNotification){
+        center.removeObserver(self, name: "NSApplicationDidFinishLaunchingNotification", object: nil)
+        let mainMenu = NSApp.mainMenu
+        if let menuItem = mainMenu?.itemWithTitle("Window") {
+            let pathItem = NSMenuItem.init(title: "Workspace Path", action: #selector(didTapWorkspaceMenuItem), keyEquivalent: "W")
+            pathItem.keyEquivalentModifierMask = Int(NSEventModifierFlags.ControlKeyMask.rawValue)
+            pathItem.target = self
+            menuItem.submenu?.addItem(pathItem)
+        }
+    }
+    func didTapWorkspaceMenuItem() {
+        if let workspacePath = KZFunctions.workspacePath() {
+            let path: NSString = workspacePath
+//            let workspace = path.lastPathComponent
+//            NSLog("tapped \(workspace)")
+            var branchName = ""
+            if let branch = kz_gitBranch(workspacePath) {
+                branchName = branch
+            }
+            let alert = NSAlert()
+            alert.messageText = workspacePath + "\nBranch:" + branchName
+            alert.runModal()
+       }
+    }
+
     static func swizzleMethods() {
         guard let storageClass = NSClassFromString("NSTextStorage") as? NSObject.Type,
             let textViewClass = NSClassFromString("NSTextView") as? NSObject.Type else {
@@ -57,6 +85,7 @@ class KZLinkedConsole: NSObject {
             let fixAttributesInRangeSelector = #selector(NSTextStorage.fixAttributesInRange(_:))
             let kz_fixAttributesInRangeSelector = #selector(NSTextStorage.kz_fixAttributesInRange(_:))
             try storageClass.jr_swizzleMethod(fixAttributesInRangeSelector, withMethod: kz_fixAttributesInRangeSelector)
+
             let mouseDownSelector = #selector(NSTextView.mouseDown(_:))
             let kz_mouseDownSelector = #selector(NSTextView.kz_mouseDown(_:))
             try textViewClass.jr_swizzleMethod(mouseDownSelector, withMethod: kz_mouseDownSelector)
@@ -64,5 +93,21 @@ class KZLinkedConsole: NSObject {
         catch {
             Swift.print("Swizzling failed")
         }
+
+
+//        guard let consoleArea = NSClassFromString("IDEConsoleArea") as? NSObject.Type else {
+//                return
+//        }
+//
+//        NSLog("\(consoleArea)")
+//        do {
+//            let loadViewSelector = #selector(NSView.load)
+//            let mainView = NSApp.mainWindow
+//            NSLog("\(mainView)")
+//        }
+//        catch {
+//            Swift.print("Swizzling Console area failed")
+//        }
+
     }
 }

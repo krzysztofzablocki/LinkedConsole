@@ -7,15 +7,24 @@ import Foundation
 import AppKit
 
 class KZPluginHelper: NSObject {
-    static func runShellCommand(launchPath: String, arguments: [String]) -> String? {
-        let pipe = NSPipe()
+    static func runShellCommand(launchPath: String, arguments: [String], currenctDirectoryPath:String? = nil) -> String? {
+        let outPipe = NSPipe()
+        let errPipe = NSPipe()
         let task = NSTask()
         task.launchPath = launchPath
         task.arguments = arguments
-        task.standardOutput = pipe
-        let file = pipe.fileHandleForReading
+        task.standardOutput = outPipe
+        task.standardError = errPipe
+        if let pwd = currenctDirectoryPath {
+            task.currentDirectoryPath = pwd
+        }
+        let outFile = outPipe.fileHandleForReading
+        let errFile = errPipe.fileHandleForReading
         task.launch()
-        guard let result = NSString(data: file.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+        guard let result = NSString(data: outFile.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+            return nil
+        }
+        guard let err = NSString(data: errFile.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
             return nil
         }
         return result as String

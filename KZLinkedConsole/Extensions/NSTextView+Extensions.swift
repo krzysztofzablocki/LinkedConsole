@@ -129,3 +129,19 @@ func kz_findFile(fileName : String, _ searchPath : String, _ prevSearchPath : St
         ["-L", searchPath, "-name", prevSearchPath!, "-prune", "-o", "-name", fileName, "-print", "-quit"])
     return KZPluginHelper.runShellCommand("/usr/bin/find", arguments: args)
 }
+
+func kz_gitBranch(path: String) -> String? {
+    let args = ["branch", "--no-color"]
+    if let branches = KZPluginHelper.runShellCommand("/usr/bin/git", arguments: args, currenctDirectoryPath: path) {
+        let branchStr: NSString = branches
+        let branchArray = branchStr.componentsSeparatedByString("\n")
+        var branchName = ""
+        for item in branchArray {
+            if item.hasPrefix("*") {
+                branchName = item
+            }
+        }
+        return branchName
+    }
+    return nil
+}
