@@ -62,12 +62,15 @@ class KZLinkedConsole: NSObject {
     }
     func didTapWorkspaceMenuItem() {
         if let workspacePath = KZFunctions.workspacePath() {
-            let path: NSString = workspacePath
-//            let workspace = path.lastPathComponent
-//            NSLog("tapped \(workspace)")
             var branchName = ""
             if let branch = kz_gitBranch(workspacePath) {
                 branchName = branch
+            }
+
+            if let toolbar = NSApp.mainWindow?.toolbar {
+                let item = NSToolbarItem(itemIdentifier: "workspace")
+                item.label = "workspace"
+                toolbar.insertItemWithItemIdentifier("workspace", atIndex: toolbar.items.count)
             }
             let alert = NSAlert()
             alert.messageText = workspacePath + "\nBranch:" + branchName
@@ -101,13 +104,13 @@ class KZLinkedConsole: NSObject {
 //
 //        NSLog("\(consoleArea)")
 //        do {
-//            let loadViewSelector = #selector(NSView.load)
+//            let sel = Selector("_shouldAppendItem:")
+//            let loadViewSelector = #selector(NSObject)
 //            let mainView = NSApp.mainWindow
 //            NSLog("\(mainView)")
 //        }
 //        catch {
 //            Swift.print("Swizzling Console area failed")
 //        }
-
     }
 }

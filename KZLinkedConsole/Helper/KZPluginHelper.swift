@@ -27,6 +27,7 @@ class KZPluginHelper: NSObject {
         guard let err = NSString(data: errFile.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
             return nil
         }
+        Swift.print(err)
         return result as String
     }
 
@@ -98,6 +99,14 @@ extension KZPluginHelper {
         guard let contentView = window?.contentView,
         let consoleTextView = KZPluginHelper.getViewByClassName("IDEConsoleTextView", inContainer: contentView) as? NSTextView else {
             return nil
+        }
+        return consoleTextView
+    }
+
+    static func consoleArea(inWindow window: NSWindow? = NSApp.mainWindow) -> NSView? {
+        guard let contentView = window?.contentView,
+            let consoleTextView = KZPluginHelper.getViewByClassName("IDEConsoleArea", inContainer: contentView) as? NSTextView else {
+                return nil
         }
         return consoleTextView
     }

@@ -244,7 +244,7 @@ final class KZLinkInjector {
 
             textStorage.addAttributes(
                 [NSLinkAttributeName: "",
-                    NSForegroundColorAttributeName: NSColor.blueColor(),
+                    NSForegroundColorAttributeName: NSColor.darkGrayColor(),
                     KZLinkedConsole.Strings.linkedFileName: fileName,
                     KZLinkedConsole.Strings.linkedLine: line
                 ], range: range)
@@ -264,9 +264,9 @@ final class KZLinkInjector {
         }
         var color = NSColor.clearColor()
         if lineText.hasPrefix("V ") {
-            color = NSColor.yellowColor()
-        } else if lineText.hasPrefix("D "){
             color = NSColor.greenColor()
+        } else if lineText.hasPrefix("D "){
+            color = NSColor.grayColor()
         } else if lineText.hasPrefix("I "){
             color = NSColor.blueColor()
         } else if lineText.hasPrefix("U "){
