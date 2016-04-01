@@ -255,12 +255,13 @@ final class KZLinkInjector {
     private func colorLine(myText:NSString, linkRange:NSRange){
         let lineRange = myText.lineRangeForRange(NSMakeRange(linkRange.location, linkRange.length))
         let lineText:NSString = myText.substringWithRange(lineRange)
-        let arrowPos = lineText.rangeOfString("➤")
+//        let leftArrowPos = lineText.rangeOfString("⊲")
+        let rightArrowPos = lineText.rangeOfString("⊳")
         let colorRange:NSRange
-        if arrowPos.location != NSNotFound {
-            colorRange = NSMakeRange(lineRange.location, arrowPos.location)
+        if rightArrowPos.location != NSNotFound {
+            colorRange = NSMakeRange(lineRange.location, rightArrowPos.location)
         } else {
-            colorRange = NSMakeRange(lineRange.location, linkRange.location - lineRange.location)
+            colorRange = NSMakeRange(lineRange.location, linkRange.location - lineRange.location+1)
         }
         var color = NSColor.clearColor()
         if lineText.hasPrefix("V ") {
