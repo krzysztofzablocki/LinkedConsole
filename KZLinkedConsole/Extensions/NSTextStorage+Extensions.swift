@@ -237,15 +237,55 @@ final class KZLinkInjector {
     }
 
     private func addLinksToTextStorage(links : [LinkDetails]) {
+        let myText: NSString = String(textStorage.string)
         textStorage.beginEditing()
         for (fileName, line, range) in links {
+            colorLine(myText, linkRange: range)
+
             textStorage.addAttributes(
                 [NSLinkAttributeName: "",
+                    NSForegroundColorAttributeName: NSColor.darkGrayColor(),
                     KZLinkedConsole.Strings.linkedFileName: fileName,
                     KZLinkedConsole.Strings.linkedLine: line
                 ], range: range)
         }
         textStorage.endEditing()
+    }
+
+    private func colorLine(myText:NSString, linkRange:NSRange){
+        let lineRange = myText.lineRangeForRange(NSMakeRange(linkRange.location, linkRange.length))
+        let lineText:NSString = myText.substringWithRange(lineRange)
+//        let leftArrowPos = lineText.rangeOfString("⊲")
+        let rightArrowPos = lineText.rangeOfString("⊳")
+        let colorRange:NSRange
+        if rightArrowPos.location != NSNotFound {
+            colorRange = NSMakeRange(lineRange.location, rightArrowPos.location)
+        } else {
+            colorRange = NSMakeRange(lineRange.location, linkRange.location - lineRange.location+1)
+        }
+        var color = NSColor.clearColor()
+        if lineText.hasPrefix("V ") {
+            color = NSColor.greenColor()
+        } else if lineText.hasPrefix("D "){
+            color = NSColor.grayColor()
+        } else if lineText.hasPrefix("I "){
+            color = NSColor.blueColor()
+        } else if lineText.hasPrefix("U "){
+            color = NSColor.brownColor()
+        } else if lineText.hasPrefix("W "){
+            color = NSColor.magentaColor()
+        } else if lineText.hasPrefix("E "){
+            color = NSColor.redColor()
+        } else if lineText.hasPrefix("H "){
+            color = NSColor.purpleColor()
+        } else {
+            color = NSColor.blackColor()
+        }
+        if color != NSColor.clearColor() {
+            textStorage.addAttributes(
+                [NSForegroundColorAttributeName: color], range: colorRange)
+            //            DLog(lineText)
+        }
     }
 
     private static func findLinksInText(string : String, range : NSRange) -> [LinkDetails]? {

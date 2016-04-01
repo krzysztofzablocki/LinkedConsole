@@ -7,17 +7,27 @@ import Foundation
 import AppKit
 
 class KZPluginHelper: NSObject {
-    static func runShellCommand(launchPath: String, arguments: [String]) -> String? {
-        let pipe = NSPipe()
+    static func runShellCommand(launchPath: String, arguments: [String], currenctDirectoryPath:String? = nil) -> String? {
+        let outPipe = NSPipe()
+        let errPipe = NSPipe()
         let task = NSTask()
         task.launchPath = launchPath
         task.arguments = arguments
-        task.standardOutput = pipe
-        let file = pipe.fileHandleForReading
+        task.standardOutput = outPipe
+        task.standardError = errPipe
+        if let pwd = currenctDirectoryPath {
+            task.currentDirectoryPath = pwd
+        }
+        let outFile = outPipe.fileHandleForReading
+        let errFile = errPipe.fileHandleForReading
         task.launch()
-        guard let result = NSString(data: file.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+        guard let result = NSString(data: outFile.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
             return nil
         }
+        guard let err = NSString(data: errFile.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+            return nil
+        }
+        Swift.print(err)
         return result as String
     }
 
@@ -70,12 +80,18 @@ extension KZPluginHelper {
 
     static func editorTextView(inWindow window: NSWindow? = NSApp.mainWindow) -> NSTextView? {
         guard let window = window,
-        let windowController = window.windowController,
-        let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor"),
-        let textView = editor.valueForKey("textView") as? NSTextView else {
+            let windowController = window.windowController,
+            let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor") else {
+                return nil
+        }
+
+        let type = String(editor.dynamicType)
+        if type != "NSKVONotifying_IDESourceCodeEditor" {
+            NSLog(type)
             return nil
         }
 
+        let textView = editor.valueForKey("textView") as? NSTextView
         return textView
     }
 
@@ -83,6 +99,14 @@ extension KZPluginHelper {
         guard let contentView = window?.contentView,
         let consoleTextView = KZPluginHelper.getViewByClassName("IDEConsoleTextView", inContainer: contentView) as? NSTextView else {
             return nil
+        }
+        return consoleTextView
+    }
+
+    static func consoleArea(inWindow window: NSWindow? = NSApp.mainWindow) -> NSView? {
+        guard let contentView = window?.contentView,
+            let consoleTextView = KZPluginHelper.getViewByClassName("IDEConsoleArea", inContainer: contentView) as? NSTextView else {
+                return nil
         }
         return consoleTextView
     }
