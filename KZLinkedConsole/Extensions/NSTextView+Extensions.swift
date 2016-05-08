@@ -25,7 +25,7 @@ extension NSTextView {
                 return
         }
         
-        KZLinkedConsole.openFile(self, fileName: fileName, lineNumber: lineNumber)
+        KZLinkedConsole.openFile(fromTextView: self, fileName: fileName, lineNumber: lineNumber)
     }
 }
 

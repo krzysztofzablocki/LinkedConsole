@@ -17,6 +17,7 @@ class KZLinkedConsole: NSObject {
     class func pluginDidLoad(bundle: NSBundle) {
         if NSBundle.mainBundle().bundleIdentifier == "com.apple.dt.Xcode" {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(controlGroupDidChange(_:)), name: "IDEControlGroupDidChangeNotificationName", object: nil)
+            NSDistributedNotificationCenter.defaultCenter().addObserver(self, selector: #selector(openFile(_:)), name: "pl.pixle.KZLinkedConsole.OpenFile", object: nil)
             swizzleMethods()
         }
     }
@@ -33,12 +34,23 @@ class KZLinkedConsole: NSObject {
         textStorage.kz_isUsedInXcodeConsole = true
     }
 
-    static func openFile(textView: NSTextView?, fileName: String, lineNumber: String? = nil) {
-        guard let workspacePath = KZPluginHelper.workspacePath() else {
+    static func openFile(notification: NSNotification) {
+        guard let fileName = notification.object?.description else {
             return
         }
         
-        guard let filePath = kz_findFile(workspacePath, fileName) else {
+        openFile(fromTextView: nil, fileName: fileName, lineNumber: notification.userInfo?["Line"]?.description)
+    }
+
+    static func openFile(fromTextView textView: NSTextView?, fileName: String, lineNumber: String? = nil) {
+        var optionalFilePath: String?
+        if (fileName as NSString).absolutePath {
+            optionalFilePath = fileName
+        } else if let workspacePath = KZPluginHelper.workspacePath() {
+            optionalFilePath = kz_findFile(workspacePath, fileName)
+        }
+        
+        guard let filePath = optionalFilePath else {
             return
         }
         
