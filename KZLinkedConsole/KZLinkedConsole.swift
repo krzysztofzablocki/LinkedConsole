@@ -33,6 +33,45 @@ class KZLinkedConsole: NSObject {
         textStorage.kz_isUsedInXcodeConsole = true
     }
 
+    static func openFile(textView: NSTextView?, fileName: String, lineNumber: String? = nil) {
+        guard let workspacePath = KZPluginHelper.workspacePath() else {
+            return
+        }
+        
+        guard let filePath = kz_findFile(workspacePath, fileName) else {
+            return
+        }
+        
+        if NSApp.delegate?.application!(NSApp, openFile: filePath) ?? false {
+            dispatch_async(dispatch_get_main_queue()) {
+                if  let textView = KZPluginHelper.editorTextView(inWindow: textView?.window),
+                    let line = Int(lineNumber!) where lineNumber != nil && line >= 1 {
+                    scrollTextView(textView, toLine:line)
+                }
+            }
+        }
+    }
+
+    static func scrollTextView(textView: NSTextView, toLine line: Int) {
+        guard let text = (textView.string as NSString?) else {
+            return
+        }
+        
+        var currentLine = 1
+        var index = 0
+        while index < text.length {
+            let lineRange = text.lineRangeForRange(NSMakeRange(index, 0))
+            index = NSMaxRange(lineRange)
+            
+            if currentLine == line {
+                textView.scrollRangeToVisible(lineRange)
+                textView.setSelectedRange(lineRange)
+                break
+            }
+            currentLine += 1
+        }
+    }
+
     static func swizzleMethods() {
         guard let storageClass = NSClassFromString("NSTextStorage") as? NSObject.Type,
             let textViewClass = NSClassFromString("NSTextView") as? NSObject.Type else {

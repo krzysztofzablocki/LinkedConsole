@@ -20,48 +20,12 @@ extension NSTextView {
         let attr = attributedString().attributesAtIndex(idx, effectiveRange: nil)
         
         guard let fileName = attr[KZLinkedConsole.Strings.linkedFileName] as? String,
-            let lineNumber = attr[KZLinkedConsole.Strings.linkedLine] as? String,
-            let appDelegate = NSApplication.sharedApplication().delegate else {
+            let lineNumber = attr[KZLinkedConsole.Strings.linkedLine] as? String else {
                 kz_mouseDown(event)
                 return
         }
         
-        guard let workspacePath = KZPluginHelper.workspacePath() else {
-            return
-        }
-        
-        guard let filePath = kz_findFile(workspacePath, fileName) else {
-            return
-        }
-        
-        if appDelegate.application!(NSApplication.sharedApplication(), openFile: filePath) {
-            dispatch_async(dispatch_get_main_queue()) {
-                if  let textView = KZPluginHelper.editorTextView(inWindow: self.window),
-                    let line = Int(lineNumber) where line >= 1 {
-                        self.scrollTextView(textView, toLine:line)
-                }
-            }
-        }
-    }
-    
-    private func scrollTextView(textView: NSTextView, toLine line: Int) {
-        guard let text = (textView.string as NSString?) else {
-            return
-        }
-        
-        var currentLine = 1
-        var index = 0
-        while index < text.length {
-            let lineRange = text.lineRangeForRange(NSMakeRange(index, 0))
-            index = NSMaxRange(lineRange)
-            
-            if currentLine == line {
-                textView.scrollRangeToVisible(lineRange)
-                textView.setSelectedRange(lineRange)
-                break
-            }
-            currentLine += 1
-        }
+        KZLinkedConsole.openFile(self, fileName: fileName, lineNumber: lineNumber)
     }
 }
 
