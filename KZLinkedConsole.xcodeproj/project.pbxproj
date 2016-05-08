@@ -40,7 +40,10 @@
 				CD65BCC41C12AD130083875E /* KZLinkedConsole */,
 				CD65BCC31C12AD130083875E /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
+			usesTabs = 0;
 		};
 		CD65BCC31C12AD130083875E /* Products */ = {
 			isa = PBXGroup;
