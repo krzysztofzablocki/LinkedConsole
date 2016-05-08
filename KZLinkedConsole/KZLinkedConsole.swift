@@ -7,8 +7,6 @@
 
 import AppKit
 
-var sharedPlugin: KZLinkedConsole?
-
 class KZLinkedConsole: NSObject {
 
     internal struct Strings {
@@ -16,26 +14,14 @@ class KZLinkedConsole: NSObject {
         static let linkedLine = "KZLinkedLine"
     }
 
-    private var bundle: NSBundle
-    private let center = NSNotificationCenter.defaultCenter()
-
-    override static func initialize() {
-        swizzleMethods()
+    class func pluginDidLoad(bundle: NSBundle) {
+        if NSBundle.mainBundle().bundleIdentifier == "com.apple.dt.Xcode" {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(controlGroupDidChange(_:)), name: "IDEControlGroupDidChangeNotificationName", object: nil)
+            swizzleMethods()
+        }
     }
 
-    init(bundle: NSBundle) {
-        self.bundle = bundle
-
-        super.init()
-        let didChangeSelector = #selector(KZLinkedConsole.didChange(_:))
-        center.addObserver(self, selector: didChangeSelector, name: "IDEControlGroupDidChangeNotificationName", object: nil)
-    }
-
-    deinit {
-        center.removeObserver(self)
-    }
-
-    func didChange(notification: NSNotification) {
+    static func controlGroupDidChange(notification: NSNotification) {
         guard let consoleTextView = KZPluginHelper.consoleTextView(),
         let textStorage = consoleTextView.valueForKey("textStorage") as? NSTextStorage else {
             return
