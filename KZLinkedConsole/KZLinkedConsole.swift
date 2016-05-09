@@ -57,6 +57,7 @@ class KZLinkedConsole: NSObject {
         }
         
         if NSApp.delegate?.application!(NSApp, openFile: filePath) ?? false {
+            NSDistributedNotificationCenter.defaultCenter().postNotificationName("pl.pixle.KZLinkedConsole.DidOpenFile", object: filePath)
             guard let line = lineNumber != nil ? Int(lineNumber!) : 0 where line >= 1 else {
                 return
             }
