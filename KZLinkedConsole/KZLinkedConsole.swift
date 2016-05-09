@@ -14,6 +14,8 @@ class KZLinkedConsole: NSObject {
         static let linkedLine = "KZLinkedLine"
     }
 
+    private static var windowDidBecomeMainObserver: NSObjectProtocol?
+
     class func pluginDidLoad(bundle: NSBundle) {
         if NSBundle.mainBundle().bundleIdentifier == "com.apple.dt.Xcode" {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(controlGroupDidChange(_:)), name: "IDEControlGroupDidChangeNotificationName", object: nil)
@@ -55,18 +57,25 @@ class KZLinkedConsole: NSObject {
         }
         
         if NSApp.delegate?.application!(NSApp, openFile: filePath) ?? false {
-            dispatch_async(dispatch_get_main_queue()) {
-                if  let textView = KZPluginHelper.editorTextView(inWindow: textView?.window),
-                    let line = Int(lineNumber!) where lineNumber != nil && line >= 1 {
-                    scrollTextView(textView, toLine:line)
-                }
+            guard let line = lineNumber != nil ? Int(lineNumber!) : 0 where line >= 1 else {
+                return
+            }
+            
+            if let window = textView?.window ?? NSApp.mainWindow {
+                scrollTextView(inWindow: window, toLine: line)
+            } else {
+                windowDidBecomeMainObserver = NSNotificationCenter.defaultCenter().addObserverForName(NSWindowDidBecomeMainNotification, object: nil, queue: NSOperationQueue.mainQueue(), usingBlock: { (notification) in
+                    scrollTextView(inWindow: notification.object as! NSWindow, toLine: line)
+                    NSNotificationCenter.defaultCenter().removeObserver(windowDidBecomeMainObserver!)
+                })
             }
         }
     }
 
-    static func scrollTextView(textView: NSTextView, toLine line: Int) {
-        guard let text = (textView.string as NSString?) else {
-            return
+    static func scrollTextView(inWindow window: NSWindow, toLine line: Int) {
+        guard let textView = KZPluginHelper.editorTextView(inWindow: window),
+            let text = (textView.string as NSString?) else {
+                return
         }
         
         var currentLine = 1

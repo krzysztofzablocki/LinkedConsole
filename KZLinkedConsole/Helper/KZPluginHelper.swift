@@ -68,9 +68,8 @@ extension KZPluginHelper {
         return workspacePath.stringByDeletingLastPathComponent as String
     }
 
-    static func editorTextView(inWindow window: NSWindow? = NSApp.mainWindow) -> NSTextView? {
-        guard let window = window,
-            let windowController = window.windowController,
+    static func editorTextView(inWindow window: NSWindow) -> NSTextView? {
+        guard let windowController = window.windowController,
             let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor") else {
                 return nil
         }
