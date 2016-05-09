@@ -76,6 +76,24 @@ class KZFormatter: DDDispatchQueueLogFormatter {
 }
 ~~~
 
+## Opening files from outside Xcode
+
+KZLinkedConsole also supports opening files from outside Xcode through distributed notifications. The [xed](https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man1/xed.1.html) command line tool is supposed to provide this feature but is unfortunately [terribly broken](http://openradar.appspot.com/19529585).
+
+In order to open the file *Example.m* and select the line *123*, simply do the following:
+
+```objc
+[[NSDistributedNotificationCenter defaultCenter]
+    postNotificationName:@"pl.pixle.KZLinkedConsole.OpenFile"
+                  object:@"Example.m"
+                userInfo:@{ @"Line": @123 }
+      deliverImmediately:YES];
+```
+
+You can also specify an absolute path if you know it. The userInfo dictionary with line number information is optional.
+
+If the file was successfully opened, KZLinkedConsole will post back a `pl.pixle.KZLinkedConsole.DidOpenFile` distributed notification.
+
 ## More info
 Read more about creation of this plugin on [my blog](http://merowing.info/2015/12/writing-xcode-plugin-in-swift/)
 

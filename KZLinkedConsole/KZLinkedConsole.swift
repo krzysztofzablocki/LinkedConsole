@@ -7,8 +7,6 @@
 
 import AppKit
 
-var sharedPlugin: KZLinkedConsole?
-
 class KZLinkedConsole: NSObject {
 
     internal struct Strings {
@@ -16,26 +14,17 @@ class KZLinkedConsole: NSObject {
         static let linkedLine = "KZLinkedLine"
     }
 
-    private var bundle: NSBundle
-    private let center = NSNotificationCenter.defaultCenter()
+    private static var windowDidBecomeMainObserver: NSObjectProtocol?
 
-    override static func initialize() {
-        swizzleMethods()
+    class func pluginDidLoad(bundle: NSBundle) {
+        if NSBundle.mainBundle().bundleIdentifier == "com.apple.dt.Xcode" {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(controlGroupDidChange(_:)), name: "IDEControlGroupDidChangeNotificationName", object: nil)
+            NSDistributedNotificationCenter.defaultCenter().addObserver(self, selector: #selector(openFile(_:)), name: "pl.pixle.KZLinkedConsole.OpenFile", object: nil)
+            swizzleMethods()
+        }
     }
 
-    init(bundle: NSBundle) {
-        self.bundle = bundle
-
-        super.init()
-        let didChangeSelector = #selector(KZLinkedConsole.didChange(_:))
-        center.addObserver(self, selector: didChangeSelector, name: "IDEControlGroupDidChangeNotificationName", object: nil)
-    }
-
-    deinit {
-        center.removeObserver(self)
-    }
-
-    func didChange(notification: NSNotification) {
+    static func controlGroupDidChange(notification: NSNotification) {
         guard let consoleTextView = KZPluginHelper.consoleTextView(),
         let textStorage = consoleTextView.valueForKey("textStorage") as? NSTextStorage else {
             return
@@ -45,6 +34,64 @@ class KZLinkedConsole: NSObject {
             NSUnderlineStyleAttributeName: NSUnderlineStyle.StyleSingle.rawValue
         ]
         textStorage.kz_isUsedInXcodeConsole = true
+    }
+
+    static func openFile(notification: NSNotification) {
+        guard let fileName = notification.object?.description else {
+            return
+        }
+        
+        openFile(fromTextView: nil, fileName: fileName, lineNumber: notification.userInfo?["Line"]?.description)
+    }
+
+    static func openFile(fromTextView textView: NSTextView?, fileName: String, lineNumber: String? = nil) {
+        var optionalFilePath: String?
+        if (fileName as NSString).absolutePath {
+            optionalFilePath = fileName
+        } else if let workspacePath = KZPluginHelper.workspacePath() {
+            optionalFilePath = kz_findFile(workspacePath, fileName)
+        }
+        
+        guard let filePath = optionalFilePath else {
+            return
+        }
+        
+        if NSApp.delegate?.application!(NSApp, openFile: filePath) ?? false {
+            NSDistributedNotificationCenter.defaultCenter().postNotificationName("pl.pixle.KZLinkedConsole.DidOpenFile", object: filePath)
+            guard let line = lineNumber != nil ? Int(lineNumber!) : 0 where line >= 1 else {
+                return
+            }
+            
+            if let window = textView?.window ?? NSApp.mainWindow {
+                scrollTextView(inWindow: window, toLine: line)
+            } else {
+                windowDidBecomeMainObserver = NSNotificationCenter.defaultCenter().addObserverForName(NSWindowDidBecomeMainNotification, object: nil, queue: NSOperationQueue.mainQueue(), usingBlock: { (notification) in
+                    scrollTextView(inWindow: notification.object as! NSWindow, toLine: line)
+                    NSNotificationCenter.defaultCenter().removeObserver(windowDidBecomeMainObserver!)
+                })
+            }
+        }
+    }
+
+    static func scrollTextView(inWindow window: NSWindow, toLine line: Int) {
+        guard let textView = KZPluginHelper.editorTextView(inWindow: window),
+            let text = (textView.string as NSString?) else {
+                return
+        }
+        
+        var currentLine = 1
+        var index = 0
+        while index < text.length {
+            let lineRange = text.lineRangeForRange(NSMakeRange(index, 0))
+            index = NSMaxRange(lineRange)
+            
+            if currentLine == line {
+                textView.scrollRangeToVisible(lineRange)
+                textView.setSelectedRange(lineRange)
+                break
+            }
+            currentLine += 1
+        }
     }
 
     static func swizzleMethods() {
