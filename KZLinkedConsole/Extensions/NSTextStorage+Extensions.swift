@@ -9,12 +9,12 @@ import AppKit
 
 let DEBUG_LOGGING = false
 
-func DLog(@autoclosure msgClosure : () -> String?) {
+func DLog(_ msgClosure : @autoclosure () -> String?) {
     if DEBUG_LOGGING {
         guard let msg = msgClosure() else {
             return
         }
-        NSLog("%@ %@", NSDate(), msg)
+        NSLog("%@ %@", [Date(), msg])
     }
 }
 
@@ -36,7 +36,7 @@ extension NSTextStorage {
         }
 
         set {
-            objc_setAssociatedObject(self, &AssociatedKeys.isConsoleKey, NSNumber(bool: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            objc_setAssociatedObject(self, &AssociatedKeys.isConsoleKey, NSNumber(value: newValue), .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
     }
 
@@ -53,14 +53,14 @@ extension NSTextStorage {
         }
     }
 
-    func kz_fixAttributesInRange(range: NSRange) {
+    func kz_fixAttributesInRange(_ range: NSRange) {
         kz_fixAttributesInRange(range) //! call original implementation first
 
         if !self.kz_isUsedInXcodeConsole {
             return
         }
 
-        if !self.editedMask.contains(.EditedCharacters) {
+        if !self.editedMask.contains(.editedCharacters) {
             return
         }
 
@@ -104,7 +104,7 @@ final class KZLinkInjector {
      */
     private let syncThreshold = 2000
 
-    private let pendingLinksBatchTime = dispatch_time(DISPATCH_TIME_NOW, 300000000)
+    private let pendingLinksBatchTime = DispatchTime.now() + Double(300000000) / Double(NSEC_PER_SEC)
 
     /**
      Xcode's NSTextStorage instance.  Unowned to avoid a retain cycle since
@@ -142,8 +142,8 @@ final class KZLinkInjector {
     /**
      Queue used for log parsing work.
      */
-    private var queue : dispatch_queue_t {
-        return dispatch_queue_create("KZLinkedConsole.KZLinkInjector.queue", DISPATCH_QUEUE_SERIAL)
+    private var queue : DispatchQueue {
+        return DispatchQueue(label: "KZLinkedConsole.KZLinkInjector.queue", attributes: [])
     }
 
     init(textStorage : NSTextStorage) {
@@ -157,7 +157,7 @@ final class KZLinkInjector {
      This is how new LinkDetails from the background thread are saved until
      pendingLinksBatchDelay has elapsed.
      */
-    private func appendPendingLinks(newLinks : [LinkDetails]) -> Int {
+    private func appendPendingLinks(_ newLinks : [LinkDetails]) -> Int {
         DLog("Appending \(newLinks.count) \(newLinks.first!.range)")
         return KZLinkInjector.withLock(pendingLinksLock) { [unowned self] () -> Int in
             self.pendingLinks += newLinks
@@ -174,7 +174,7 @@ final class KZLinkInjector {
      This is how new LinkDetails from self.pendingLinks are retrieved by
      the main thread when pendingLinksBatchDelay has elapsed.
      */
-    private func getPendingLinksMatchingCounter(myPendingLinksCounter : Int) -> [LinkDetails]? {
+    private func getPendingLinksMatchingCounter(_ myPendingLinksCounter : Int) -> [LinkDetails]? {
         return KZLinkInjector.withLock(pendingLinksLock) { [unowned self] () -> [LinkDetails]? in
             if self.pendingLinksCounter != myPendingLinksCounter {
                 return nil
@@ -188,7 +188,7 @@ final class KZLinkInjector {
         }
     }
 
-    private func injectLinks(range : NSRange) {
+    fileprivate func injectLinks(_ range : NSRange) {
         if (range.length <= syncThreshold) {
             self.injectLinksIntoTextSync(range)
         }
@@ -197,7 +197,7 @@ final class KZLinkInjector {
         }
     }
 
-    private func injectLinksIntoTextSync(range : NSRange) {
+    private func injectLinksIntoTextSync(_ range : NSRange) {
         guard let newLinks = KZLinkInjector.findLinksInText(textStorage.string, range: range) else {
             return
         }
@@ -206,14 +206,14 @@ final class KZLinkInjector {
         self.addLinksToTextStorage(newLinks)
     }
 
-    private func injectLinksIntoTextAsync(range : NSRange) {
+    private func injectLinksIntoTextAsync(_ range : NSRange) {
         let myText = String(textStorage.string)
-        dispatch_async(queue) { [weak self] () -> Void in
-            self?.injectLinksIntoTextBackground(myText, range: range)
+        queue.async { [weak self] () -> Void in
+            self?.injectLinksIntoTextBackground(myText!, range: range)
         }
     }
 
-    private func injectLinksIntoTextBackground(myText : String, range : NSRange) {
+    private func injectLinksIntoTextBackground(_ myText : String, range : NSRange) {
         guard let newLinks = KZLinkInjector.findLinksInText(myText, range: range) else {
             return
         }
@@ -221,13 +221,13 @@ final class KZLinkInjector {
         self.handlePendingLinksAfterDelay(myPendingLinksCounter)
     }
 
-    private func handlePendingLinksAfterDelay(myPendingLinksCounter : Int) {
-        dispatch_after(pendingLinksBatchTime, dispatch_get_main_queue()) { [weak self] () -> Void in
+    private func handlePendingLinksAfterDelay(_ myPendingLinksCounter : Int) {
+        DispatchQueue.main.asyncAfter(deadline: pendingLinksBatchTime) { [weak self] () -> Void in
             self?.handlePendingLinks(myPendingLinksCounter)
         }
     }
 
-    private func handlePendingLinks(myPendingLinksCounter : Int) {
+    private func handlePendingLinks(_ myPendingLinksCounter : Int) {
         guard let myPendingLinks = self.getPendingLinksMatchingCounter(myPendingLinksCounter) else {
             return;
         }
@@ -236,7 +236,7 @@ final class KZLinkInjector {
         self.addLinksToTextStorage(myPendingLinks)
     }
 
-    private func addLinksToTextStorage(links : [LinkDetails]) {
+    private func addLinksToTextStorage(_ links : [LinkDetails]) {
         textStorage.beginEditing()
         for (fileName, line, range) in links {
             textStorage.addAttributes(
@@ -248,25 +248,25 @@ final class KZLinkInjector {
         textStorage.endEditing()
     }
 
-    private static func findLinksInText(string : String, range : NSRange) -> [LinkDetails]? {
+    private static func findLinksInText(_ string : String, range : NSRange) -> [LinkDetails]? {
         let text = string as NSString
         var links : [LinkDetails] = []
-        let matches = pattern.matchesInString(string, options: [], range: range)
+        let matches = pattern.matches(in: string, options: [], range: range)
         for result in matches where result.numberOfRanges == 5 {
-            let fullRange = result.rangeAtIndex(0)
-            let fileNameRange = result.rangeAtIndex(1)
-            let maybeParensRange = result.rangeAtIndex(3)
-            let lineRange = result.rangeAtIndex(4)
+            let fullRange = result.rangeAt(0)
+            let fileNameRange = result.rangeAt(1)
+            let maybeParensRange = result.rangeAt(3)
+            let lineRange = result.rangeAt(4)
 
             let ext: String
             if maybeParensRange.location == NSNotFound {
-                let extensionRange = result.rangeAtIndex(2)
-                ext = text.substringWithRange(extensionRange)
+                let extensionRange = result.rangeAt(2)
+                ext = text.substring(with: extensionRange)
             } else {
                 ext = "swift"
             }
-            let fileName = "\(text.substringWithRange(fileNameRange)).\(ext)"
-            let line = text.substringWithRange(lineRange)
+            let fileName = "\(text.substring(with: fileNameRange)).\(ext)"
+            let line = text.substring(with: lineRange)
 
             links.append((fileName, line, fullRange))
         }
@@ -280,10 +280,10 @@ final class KZLinkInjector {
         //
         // (If this gets any more complicated there will need to be a formal way to walk through multiple
         // patterns and check if each one matches.)
-        return try! NSRegularExpression(pattern: "([\\w\\+]+)\\.(\\w+)(\\([^)]*\\))?:(\\d+)", options: .CaseInsensitive)
+        return try! NSRegularExpression(pattern: "([\\w\\+]+)\\.(\\w+)(\\([^)]*\\))?:(\\d+)", options: .caseInsensitive)
     }
 
-    private static func withLock<T>(lock: NSLock, block: () -> T) -> T {
+    private static func withLock<T>(_ lock: NSLock, block: () -> T) -> T {
         lock.lock()
         let result = block()
         lock.unlock()

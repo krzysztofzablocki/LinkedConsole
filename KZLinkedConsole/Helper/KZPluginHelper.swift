@@ -7,26 +7,26 @@ import Foundation
 import AppKit
 
 class KZPluginHelper: NSObject {
-    static func runShellCommand(launchPath: String, arguments: [String]) -> String? {
-        let pipe = NSPipe()
-        let task = NSTask()
+    static func runShellCommand(_ launchPath: String, arguments: [String]) -> String? {
+        let pipe = Pipe()
+        let task = Process()
         task.launchPath = launchPath
         task.arguments = arguments
         task.standardOutput = pipe
         let file = pipe.fileHandleForReading
         task.launch()
-        guard let result = NSString(data: file.readDataToEndOfFile(), encoding: NSUTF8StringEncoding)?.stringByTrimmingCharactersInSet(NSCharacterSet.newlineCharacterSet()) else {
+        guard let result = NSString(data: file.readDataToEndOfFile(), encoding: String.Encoding.utf8.rawValue)?.trimmingCharacters(in: CharacterSet.newlines) else {
             return nil
         }
         return result as String
     }
 
-    static func getViewByClassName(name: String, inContainer container: NSView) -> NSView? {
+    static func getViewByClassName(_ name: String, inContainer container: NSView) -> NSView? {
         guard let targetClass = NSClassFromString(name) else {
             return nil
         }
         for subview in container.subviews {
-            if subview.isKindOfClass(targetClass) {
+            if subview.isKind(of: targetClass) {
                 return subview
             }
 
@@ -48,39 +48,39 @@ extension KZPluginHelper {
         }
         
         guard let anyClass = NSClassFromString("IDEWorkspaceWindowController") as? NSObject.Type,
-            let windowControllers = anyClass.valueForKey("workspaceWindowControllers") as? [NSObject],
+            let windowControllers = anyClass.value(forKey: "workspaceWindowControllers") as? [NSObject],
             let window = NSApp.keyWindow ?? NSApp.windows.first else {
                 Swift.print("Failed to establish workspace path")
                 return nil
         }
         var workspace: NSObject?
         for controller in windowControllers {
-            if controller.valueForKey("window")?.isEqual(window) == true {
-                workspace = controller.valueForKey("_workspace") as? NSObject
+            if (controller.value(forKey: "window") as AnyObject).isEqual(window) == true {
+                workspace = controller.value(forKey: "_workspace") as? NSObject
             }
         }
         
-        guard let workspacePath = workspace?.valueForKeyPath("representingFilePath._pathString") as? NSString else {
+        guard let workspacePath = workspace?.value(forKeyPath: "representingFilePath._pathString") as? NSString else {
             Swift.print("Failed to establish workspace path")
             return nil
         }
         
-        return workspacePath.stringByDeletingLastPathComponent as String
+        return workspacePath.deletingLastPathComponent as String
     }
 
     static func editorTextView(inWindow window: NSWindow) -> NSTextView? {
         guard let windowController = window.windowController,
-            let editor = windowController.valueForKeyPath("editorArea.lastActiveEditorContext.editor") else {
+            let editor = windowController.value(forKeyPath: "editorArea.lastActiveEditorContext.editor") else {
                 return nil
         }
 
-        let type = String(editor.dynamicType)
+        let type = String(describing: type(of: (editor) as AnyObject))
         if type != "NSKVONotifying_IDESourceCodeEditor" {
             NSLog(type)
             return nil
         }
 
-        let textView = editor.valueForKey("textView") as? NSTextView
+        let textView = (editor as AnyObject).value(forKey: "textView") as? NSTextView
         return textView
     }
 
