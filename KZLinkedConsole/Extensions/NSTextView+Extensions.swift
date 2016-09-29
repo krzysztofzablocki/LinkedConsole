@@ -7,17 +7,17 @@ import Foundation
 import AppKit
 
 extension NSTextView {
-    func kz_mouseDown(event: NSEvent) {
-        let pos = convertPoint(event.locationInWindow, fromView:nil)
-        let idx = characterIndexForInsertionAtPoint(pos)
+    func kz_mouseDown(_ event: NSEvent) {
+        let pos = convert(event.locationInWindow, from:nil)
+        let idx = characterIndexForInsertion(at: pos)
 
         guard let expectedClass = NSClassFromString("IDEConsoleTextView")
-            where isKindOfClass(expectedClass) && attributedString().length > 1 && idx < attributedString().length else {
+            , isKind(of: expectedClass) && attributedString().length > 1 && idx < attributedString().length else {
                 kz_mouseDown(event)
             return
         }
         
-        let attr = attributedString().attributesAtIndex(idx, effectiveRange: nil)
+        let attr = attributedString().attributes(at: idx, effectiveRange: nil)
         
         guard let fileName = attr[KZLinkedConsole.Strings.linkedFileName] as? String,
             let lineNumber = attr[KZLinkedConsole.Strings.linkedLine] as? String else {
@@ -58,10 +58,10 @@ var kz_filePathCache = [String : [String : String]]()
  expensive also.
 
  */
-func kz_findFile(workspacePath : String, _ fileName : String) -> String? {
+func kz_findFile(_ workspacePath : String, _ fileName : String) -> String? {
     var thisWorkspaceCache = kz_filePathCache[workspacePath] ?? [:]
     if let result = thisWorkspaceCache[fileName] {
-        if NSFileManager.defaultManager().fileExistsAtPath(result) {
+        if FileManager.default.fileExists(atPath: result) {
             return result
         }
     }
@@ -78,16 +78,16 @@ func kz_findFile(workspacePath : String, _ fileName : String) -> String? {
         }
 
         prevSearchPath = searchPath
-        searchPath = (searchPath as NSString).stringByDeletingLastPathComponent
+        searchPath = (searchPath as NSString).deletingLastPathComponent
         searchCount += 1
-        let searchPathCount = searchPath.componentsSeparatedByString("/").count
+        let searchPathCount = searchPath.components(separatedBy: "/").count
         if searchPathCount <= 3 || searchCount >= 2 {
             return nil
         }
     }
 }
 
-func kz_findFile(fileName : String, _ searchPath : String, _ prevSearchPath : String?) -> String? {
+func kz_findFile(_ fileName : String, _ searchPath : String, _ prevSearchPath : String?) -> String? {
     let args = (prevSearchPath == nil ?
         ["-L", searchPath, "-name", fileName, "-print", "-quit"] :
         ["-L", searchPath, "-name", prevSearchPath!, "-prune", "-o", "-name", fileName, "-print", "-quit"])
