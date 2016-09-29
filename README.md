@@ -8,8 +8,11 @@ Wonder no more, instead just click on it to jump to the culprit. Simple as that.
 
 ## Installation
 
-Download the source, build the Xcode project and restart Xcode. 
+Download the source, build the Xcode project and restart Xcode.
 The plugin will automatically be installed in ~/Library/Application Support/Developer/Shared/Xcode/Plug-ins. To uninstall, just remove the plugin from there (and restart Xcode).
+
+#### Swift 3
+Xcode8 / Swift3 is on `swift3` branch.
 
 ### Alcatraz
 
@@ -31,7 +34,7 @@ func logMessage(message: String, filename: String = __FILE__, line: Int = __LINE
 - [XCGLogger](https://github.com/DaveWoodCom/XCGLogger) is supported out of the box.
 - [SwiftyBeaver](https://github.com/skreutzberger/SwiftyBeaver) is supported out of the box.
 - [Log](https://github.com/delba/Log) is supported out of the box.
-- [QorumLogs](https://github.com/goktugyil/QorumLogs) after enable KZLinkedConsoleSupportEnabled flag.  
+- [QorumLogs](https://github.com/goktugyil/QorumLogs) after enable KZLinkedConsoleSupportEnabled flag.
 ~~~swift
 QorumLogs.KZLinkedConsoleSupportEnabled = true
 ~~~
