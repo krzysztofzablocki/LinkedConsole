@@ -50,6 +50,7 @@
         }
         NSRange textRange = [textView characterRangeForLineRange:NSMakeRange(line - 1, 1)];
         [textView setSelectedTextRange:textRange];
+        [textView centerSelectionInVisibleArea:nil];
     });
 }
 
