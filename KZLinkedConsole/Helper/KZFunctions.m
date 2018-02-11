@@ -10,7 +10,8 @@
 
 @interface NSObject (SourceEditorView_Private)
 
-- (void)_moveDownBy:(long long)arg1;
+- (NSRange)characterRangeForLineRange:(NSRange)arg1;
+- (void)setSelectedTextRange:(NSRange)arg1;
 
 @end
 
@@ -39,13 +40,16 @@
             NSLog(@"Couldn't locate textView in %@", window);
         }
         
-        if (![textView respondsToSelector:@selector(_moveDownBy:)]) {
-            NSLog(@"textView doesn't respond to _moveDownBy: %@", textView);
+        if (![textView respondsToSelector:@selector(setSelectedTextRange:)]) {
+            NSLog(@"textView doesn't respond to setSelectedTextRange: %@", textView);
             return;
         }
-        [textView moveToBeginningOfDocument:nil];
-        [textView _moveDownBy:(line - 1)];
-        [textView selectLine:nil];
+        if (![textView respondsToSelector:@selector(characterRangeForLineRange:)]) {
+            NSLog(@"textView doesn't respond to characterRangeForLineRange: %@", textView);
+            return;
+        }
+        NSRange textRange = [textView characterRangeForLineRange:NSMakeRange(line - 1, 1)];
+        [textView setSelectedTextRange:textRange];
     });
 }
 
