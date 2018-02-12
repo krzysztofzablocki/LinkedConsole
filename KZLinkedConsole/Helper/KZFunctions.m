@@ -49,6 +49,7 @@
             return;
         }
         NSRange textRange = [textView characterRangeForLineRange:NSMakeRange(line - 1, 1)];
+        textRange.length += 1; // Make it whole line selection.
         [textView setSelectedTextRange:textRange];
         [textView centerSelectionInVisibleArea:nil];
     });
