@@ -41,7 +41,7 @@ class KZLinkedConsole: NSObject {
     }
 
     static func openFile(_ notification: Notification) {
-        guard let fileName = (notification.object as AnyObject).description else {
+        guard let fileName = (notification.object as? NSObject)?.description else {
             return
         }
         
@@ -78,9 +78,13 @@ class KZLinkedConsole: NSObject {
     }
 
     static func scrollTextView(inWindow window: NSWindow, toLine line: Int) {
+        guard nil == NSClassFromString("SourceEditor.SourceEditorView") else {
+            KZFunctions.scrollXcode9TextView(in: window, toLine: line)
+            return
+        }
         guard let textView = KZPluginHelper.editorTextView(inWindow: window),
             let text = (textView.string as NSString?) else {
-                return
+            return
         }
         
         var currentLine = 1
